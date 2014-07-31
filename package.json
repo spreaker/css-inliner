@@ -1,6 +1,6 @@
 {
   "name": "spreaker-css-inliner",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A CLI interface for juice CSS inliner",
   "keywords": [
     "email",
@@ -10,7 +10,9 @@
   "repository": "https://github.com/spreaker/css-inliner.git",
   "homepage": "https://github.com/spreaker/css-inliner/",
   "author": "Spreaker <dev@spreaker.com>",
-  "bin": "./bin/inline",
+  "bin": {
+    "inline": "./bin/inline"
+  },
   "licenses": [
     {
       "type": "MIT",
