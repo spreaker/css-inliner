@@ -1,20 +1,20 @@
 {
-  "name": "spreaker-email-inliner",
+  "name": "spreaker-css-inliner",
   "version": "0.0.1",
-  "description": "Command line tool for CSS-inlining into email templates",
+  "description": "A CLI interface for juice CSS inliner",
   "keywords": [
     "email",
     "css",
     "inliner"
   ],
-  "repository": "https://github.com/spreaker/spreaker-email-inliner.git",
-  "homepage": "https://github.com/spreaker/spreaker-email-inliner/",
+  "repository": "https://github.com/spreaker/css-inliner.git",
+  "homepage": "https://github.com/spreaker/css-inliner/",
   "author": "Spreaker <dev@spreaker.com>",
   "bin": "./bin/inline",
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://github.com/spreaker/spreaker-email-inliner/raw/master/LICENSE"
+      "url": "http://github.com/spreaker/css-inliner/raw/master/LICENSE"
     }
   ],
   "dependencies": {
