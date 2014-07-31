@@ -4,7 +4,7 @@ var juice = require('juice2');
 var fs    = require('fs');
 
 // Parse arguments
-var args = require('optimist')
+var optimist = require('optimist')
     .usage('Read an input file or stding, inline styles and save the output to a new file or stdout.')
     .options('i', { alias: 'input', describe: 'Input file'})
     .options('o', { alias: 'output', describe: 'Output file'})
@@ -12,7 +12,10 @@ var args = require('optimist')
     .options('p', { alias: 'preserve-mq', describe: 'Preserve media queries', default: false })
     .boolean('r')
     .options('r', { alias: 'remove-styles', describe: 'Remove styles tag', default: false })
-    .argv;
+    .boolean('h')
+    .options('h', { alias: 'help', describe: 'Show this help' });
+
+var args = optimist.argv;
 
 function readInput(stream, callback)
 {
@@ -62,6 +65,11 @@ function onError(err, message)
     process.exit(1);
 }
 
+if (args.h) {
+    optimist.showHelp();
+    process.exit(1);
+}
+
 if (args.i && !fs.existsSync(args.i)) {
     onError(null, "input file does not exists: " + args.i);
 }
@@ -83,6 +91,5 @@ readInput(inputStream, function(err, inputData){
 
             process.exit(0);
         });
-
     });
 });
