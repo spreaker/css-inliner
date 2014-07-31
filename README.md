@@ -6,7 +6,7 @@ A CLI interface for [juice](https://github.com/andrewrk/juice).
 # Install
 
 ```
-npm install spreaker-css-inliner
+npm install -g spreaker-css-inliner
 ```
 
 
