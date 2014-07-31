@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+// Parse arguments
+var args = require('optimist')
+    .usage('Usage: $0 -c [config] -r [region]')
+    .demand(['c', 'r'])
+    .alias('c', 'config')
+    .alias('r', 'region')
+    .describe('c', 'Config file')
+    .describe('r', 'Region (EU, US_EAST, US_WEST)')
+    .argv;
