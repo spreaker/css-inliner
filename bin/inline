@@ -5,7 +5,7 @@ var fs    = require('fs');
 
 // Parse arguments
 var optimist = require('optimist')
-    .usage('Read an input file or stding, inline styles and save the output to a new file or stdout.')
+    .usage('Read an input file or stdin, inline styles and save the output to a new file or stdout.')
     .options('i', { alias: 'input', describe: 'Input file'})
     .options('o', { alias: 'output', describe: 'Output file'})
     .boolean('p')
