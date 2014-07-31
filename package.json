@@ -18,7 +18,7 @@
     }
   ],
   "dependencies": {
-    "juice2": "^1.3.0",
-    "optimist": "^0.6.1"
+    "juice2": "1.3.0",
+    "optimist": "0.6.1"
   }
 }
