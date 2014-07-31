@@ -1,11 +1,47 @@
 #!/usr/bin/env node
 
+var juice = require('juice2');
+var fs    = require('fs');
+
 // Parse arguments
 var args = require('optimist')
-    .usage('Usage: $0 -c [config] -r [region]')
-    .demand(['c', 'r'])
-    .alias('c', 'config')
-    .alias('r', 'region')
-    .describe('c', 'Config file')
-    .describe('r', 'Region (EU, US_EAST, US_WEST)')
+    .usage('Read an input file, inline styles and save the output to a new file.\nUsage: inline [options] input-file output-file')
+    .demand(2)
+    .boolean('p')
+    .options('p', { alias: 'preserve-mq', describe: 'Preserve media queries', default: false })
+    .boolean('r')
+    .options('r', { alias: 'remove-styles', describe: 'Remove styles tag', default: false })
     .argv;
+
+var inputFile  = args._[0];
+var outputFile = args._[1];
+
+if (!fs.existsSync(inputFile)) {
+    console.error("input file does not exists: " + inputFile);
+    process.exit(1);
+}
+
+console.info("Inlining styles from " + inputFile + " to " + outputFile);
+
+juice(inputFile, { preserveMediaQueries: args.p, removeStyleTags: args.r }, function(err, html) {
+
+    if (err) {
+        console.error("Unable to inline CSS styles");
+        console.error(err.stack);
+        process.exit(1);
+    }
+
+    // Write output file
+    fs.writeFile(outputFile, html, function(err) {
+
+        if (err) {
+            console.error("Unable to write output file");
+            console.error(err.stack);
+            process.exit(1);
+        }
+
+        console.info("Done");
+        process.exit(0);
+    });
+
+});
