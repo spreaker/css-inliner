@@ -63,7 +63,7 @@ function onError(err, message)
 }
 
 if (args.i && !fs.existsSync(args.i)) {
-    onError(null, "input file does not exists: " + inputFile);
+    onError(null, "input file does not exists: " + args.i);
 }
 
 var inputStream  = args.i ? fs.createReadStream(args.i) : process.stdin;
