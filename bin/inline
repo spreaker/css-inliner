@@ -5,43 +5,84 @@ var fs    = require('fs');
 
 // Parse arguments
 var args = require('optimist')
-    .usage('Read an input file, inline styles and save the output to a new file.\nUsage: inline [options] input-file output-file')
-    .demand(2)
+    .usage('Read an input file or stding, inline styles and save the output to a new file or stdout.')
+    .options('i', { alias: 'input', describe: 'Input file'})
+    .options('o', { alias: 'output', describe: 'Output file'})
     .boolean('p')
     .options('p', { alias: 'preserve-mq', describe: 'Preserve media queries', default: false })
     .boolean('r')
     .options('r', { alias: 'remove-styles', describe: 'Remove styles tag', default: false })
     .argv;
 
-var inputFile  = args._[0];
-var outputFile = args._[1];
+function readInput(stream, callback)
+{
+    var html = "";
 
-if (!fs.existsSync(inputFile)) {
-    console.error("input file does not exists: " + inputFile);
+    inputStream.setEncoding('utf8');
+
+    inputStream.on('data', function(data){
+        html += data;
+    });
+
+    inputStream.on('end', function(){
+        callback(null, html);
+    });
+
+    inputStream.on('error', function(err){
+        callback(err);
+    });
+
+    inputStream.resume();
+}
+
+function inline(html, callback)
+{
+    juice.juiceContent(html, { url: 1, preserveMediaQueries: args.p, removeStyleTags: args.r }, callback);
+}
+
+function writeOut(html, stream, callback)
+{
+    if (stream === process.stdout) {
+        outputStream.write(html, 'utf-8', callback);
+    } else {
+        outputStream.end(html, 'utf-8', callback);
+    }
+}
+
+function onError(err, message)
+{
+    if (message) {
+        process.stderr.write(message + "\n");
+    }
+
+    if (err) {
+        process.stderr.write(err.stack + "\n");
+    }
+
     process.exit(1);
 }
 
-console.info("Inlining styles from " + inputFile + " to " + outputFile);
+if (args.i && !fs.existsSync(args.i)) {
+    onError(null, "input file does not exists: " + inputFile);
+}
 
-juice(inputFile, { preserveMediaQueries: args.p, removeStyleTags: args.r }, function(err, html) {
+var inputStream  = args.i ? fs.createReadStream(args.i) : process.stdin;
+var outputStream = args.o ? fs.createWriteStream(args.o) : process.stdout;
 
-    if (err) {
-        console.error("Unable to inline CSS styles");
-        console.error(err.stack);
-        process.exit(1);
-    }
+readInput(inputStream, function(err, inputData){
 
-    // Write output file
-    fs.writeFile(outputFile, html, function(err) {
+    if (err) { onError(err, "Unable to read from input"); }
 
-        if (err) {
-            console.error("Unable to write output file");
-            console.error(err.stack);
-            process.exit(1);
-        }
+    inline(inputData, function(err, inlinedData){
 
-        console.info("Done");
-        process.exit(0);
+        if (err) { onError(err, "Unable to inline styles"); }
+
+        writeOut(inlinedData, outputStream, function(err) {
+
+            if (err) { onError(err, "Unable to write output"); }
+
+            process.exit(0);
+        });
+
     });
-
 });
